@@ -22,7 +22,6 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const isFriend = friends.find((friend) => friend._id === friendId);
 
   const patchFriend = async () => {
-    // `http://localhost:3001/users/${_id}/${friendId}`
     const response = await fetch(
       `https://astralwave.onrender.com/users/${_id}/${friendId}`,
       {
@@ -37,22 +36,22 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
     dispatch(setFriends({ friends: data }));
   };
 
+  const navigateToProfile = () => {
+    navigate(`/profile/${friendId}`);
+  };
+
   return (
     <FlexBetween>
-      <FlexBetween gap="1rem">
+      <FlexBetween gap="1rem" onClick={navigateToProfile}>
         <UserImage image={userPicturePath} size="55px" />
-        <Box
-          onClick={() => {
-            navigate(`/profile/${friendId}`);
-          }}
-        >
+        <Box>
           <Typography
             color={main}
             variant="h5"
             fontWeight="500"
             sx={{
               "&:hover": {
-                color: primaryLight,
+                color: palette.primary.light,
                 cursor: "pointer",
               },
             }}
@@ -65,15 +64,13 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
         </Box>
       </FlexBetween>
       <IconButton
-        onClick={patchFriend}
-        color={primaryDark}
-        backgroundColor={primaryLight}
-        sx={{ p: "0.6rem" }}
+        onClick={() => patchFriend()}
+        sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
       >
         {isFriend ? (
-          <PersonRemoveOutlined />
+          <PersonRemoveOutlined sx={{ color: primaryDark }} />
         ) : (
-          <PersonAddOutlined />
+          <PersonAddOutlined sx={{ color: primaryDark }} />
         )}
       </IconButton>
     </FlexBetween>
