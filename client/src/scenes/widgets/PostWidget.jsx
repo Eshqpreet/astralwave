@@ -56,20 +56,42 @@ const PostWidget = ({
     setNewComment(event.target.value);
   };
 
-  const handleCommentSubmit = () => {
-    // Create a new comment object
-    const newCommentObject = {
-      id: comments.length + 1, // generate a unique ID for the comment
-      content: newComment,
-    };
-
-    // Update the comments array with the new comment
-    const updatedComments = [...comments, newCommentObject];
-    setComments(updatedComments);
-
-    // Clear the comment input field
-    setNewComment("");
+  const handleCommentSubmit = async () => {
+    try {
+      // Create a new comment object
+      const newCommentObject = {
+        id: comments.length + 1, // generate a unique ID for the comment
+        content: newComment,
+      };
+  
+      // Send a request to the backend API to create the comment
+      const response = await fetch(`https://astralwave.onrender.com/posts/${postId}/comments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newCommentObject),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to create comment");
+      }
+  
+      // Get the newly created comment from the response
+      const createdComment = await response.json();
+  
+      // Update the comments array with the new comment
+      const updatedComments = [...comments, createdComment];
+      setComments(updatedComments);
+  
+      // Clear the comment input field
+      setNewComment("");
+    } catch (error) {
+      console.error("Error creating comment:", error);
+      // Handle the error if necessary
+    }
   };
+  
 
   return (
     <WidgetWrapper m="2rem 0">
