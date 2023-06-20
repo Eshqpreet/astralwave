@@ -35,15 +35,15 @@ app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 
-// Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
+// // Serve static files from the 'public' directory
+// app.use(express.static(path.join(__dirname, 'public')));
 
-// Define your routes here
+// // Define your routes here
 
-// Catch-all route
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// // Catch-all route
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// });
 
 /* FILE STORAGE */
 const storage = multer.diskStorage({
