@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
 import Friend from "components/Friend";
-import WidgetWrapper from "./WidgetWrapper";
+import WidgetWrapper from "components/WidgetWrapper";
 
 const PostWidget = ({
   postId,
