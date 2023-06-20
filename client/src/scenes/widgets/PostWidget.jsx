@@ -1,4 +1,3 @@
-
 import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
@@ -7,12 +6,11 @@ import {
   SendOutlined,
 } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography, TextField, useTheme } from "@mui/material";
-import FlexBetween from "components/FlexBetween";
-import Friend from "components/Friend";
-import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
+import Friend from "./Friend";
+import WidgetWrapper from "./WidgetWrapper";
 
 const PostWidget = ({
   postId,
@@ -39,17 +37,26 @@ const PostWidget = ({
   const primary = palette.primary.main;
 
   const patchLike = async () => {
-    //  http://localhost:3001
-    const response = await fetch(`https://astralwave.onrender.com/posts/${postId}/like`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: loggedInUserId }),
-    });
-    const updatedPost = await response.json();
-    dispatch(setPost({ post: updatedPost }));
+    try {
+      const response = await fetch(`https://astralwave.onrender.com/posts/${postId}/like`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: loggedInUserId }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update post like");
+      }
+
+      const updatedPost = await response.json();
+      dispatch(setPost({ post: updatedPost }));
+    } catch (error) {
+      console.error("Error updating post like:", error);
+      // Handle the error if necessary
+    }
   };
 
   const handleCommentChange = (event) => {
@@ -58,40 +65,28 @@ const PostWidget = ({
 
   const handleCommentSubmit = async () => {
     try {
-      // Create a new comment object
-      const newCommentObject = {
-        id: comments.length + 1, // generate a unique ID for the comment
-        content: newComment,
-      };
-  
-      // Send a request to the backend API to create the comment
       const response = await fetch(`https://astralwave.onrender.com/posts/${postId}/comments`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newCommentObject),
+        body: JSON.stringify({ content: newComment }),
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to create comment");
       }
-  
-      // Get the newly created comment from the response
+
       const createdComment = await response.json();
-  
-      // Update the comments array with the new comment
       const updatedComments = [...comments, createdComment];
       setComments(updatedComments);
-  
-      // Clear the comment input field
       setNewComment("");
     } catch (error) {
       console.error("Error creating comment:", error);
       // Handle the error if necessary
     }
   };
-  
 
   return (
     <WidgetWrapper m="2rem 0">
@@ -113,31 +108,19 @@ const PostWidget = ({
           src={`https://astralwave.onrender.com/assets/${picturePath}`}
         />
       )}
-      <FlexBetween mt="0.25rem">
-        <FlexBetween gap="1rem">
-          <FlexBetween gap="0.3rem">
-            <IconButton onClick={patchLike}>
-              {isLiked ? (
-                <FavoriteOutlined sx={{ color: primary }} />
-              ) : (
-                <FavoriteBorderOutlined />
-              )}
-            </IconButton>
-            <Typography>{likeCount}</Typography>
-          </FlexBetween>
-
-          <FlexBetween gap="0.3rem">
-            <IconButton onClick={() => setIsComments(!isComments)}>
-              <ChatBubbleOutlineOutlined />
-            </IconButton>
-            <Typography>{comments.length}</Typography>
-          </FlexBetween>
-        </FlexBetween>
-
+      <Box mt="0.25rem">
+        <IconButton onClick={patchLike}>
+          {isLiked ? <FavoriteOutlined sx={{ color: primary }} /> : <FavoriteBorderOutlined />}
+        </IconButton>
+        <Typography>{likeCount}</Typography>
+        <IconButton onClick={() => setIsComments(!isComments)}>
+          <ChatBubbleOutlineOutlined />
+        </IconButton>
+        <Typography>{comments.length}</Typography>
         <IconButton>
           <ShareOutlined />
         </IconButton>
-      </FlexBetween>
+      </Box>
       {isComments && (
         <Box mt="0.5rem">
           {comments.map((comment) => (
@@ -149,14 +132,12 @@ const PostWidget = ({
             </Box>
           ))}
           <Divider />
-          {/* Comment input field */}
           <TextField
             label="Write a comment"
             value={newComment}
             onChange={handleCommentChange}
             fullWidth
           />
-          {/* Submit button */}
           <IconButton onClick={handleCommentSubmit}>
             <SendOutlined />
           </IconButton>
