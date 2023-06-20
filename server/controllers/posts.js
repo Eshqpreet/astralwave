@@ -6,6 +6,7 @@ export const createPost = async (req, res) => {
     try {
         const { userId, description, picturePath } = req.body;
         const user = await User.findById(userId);
+
         const newPost = new Post({
             userId,
             firstName: user.firstName,
@@ -15,16 +16,18 @@ export const createPost = async (req, res) => {
             userPicturePath: user.picturePath,
             picturePath,
             likes: {},
-            comments: [],
+            comments: [], // Initialize comments as an empty array
         });
+
         await newPost.save();
 
-        const post = await Post.find();
-        res.status(201).json(post);
+        const populatedPost = await Post.findById(newPost._id).populate('comments');
+        res.status(201).json(populatedPost);
     } catch (err) {
         res.status(409).json({ message: err.message });
     }
 };
+
 
 /* READ */
 export const getFeedPosts = async (req, res) => {
@@ -39,8 +42,8 @@ export const getFeedPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
     try {
         const { userId } = req.params;
-        const post = await Post.find({ userId });
-        res.status(200).json(post);
+        const posts = await Post.find({ userId }).populate('comments');
+        res.status(200).json(posts);
     } catch (err) {
         res.status(404).json({ message: err.message });
     }
