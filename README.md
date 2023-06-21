@@ -17,6 +17,6 @@ ProfilePage:![Alt text](image-1.png)
 HomePage with Darkmode: ![Alt text](image.png)
 Join us today by signing in to become a part of this exciting project.
 
-Link: https://649142dc9ea33278c0d1a52f--fabulous-crostata-b54bf4.netlify.app/
+Link: https://deft-froyo-cf1b25.netlify.app/
 # astralwave
 
