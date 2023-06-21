@@ -108,7 +108,7 @@ const PostWidget = ({
           src={`https://astralwave.onrender.com/assets/${picturePath}`}
         />
       )}
-      <Box mt="0.25rem">
+      <Box display="flex" alignItems="center" mt="0.25rem">
         <IconButton onClick={patchLike}>
           {isLiked ? <FavoriteOutlined sx={{ color: primary }} /> : <FavoriteBorderOutlined />}
         </IconButton>
@@ -124,7 +124,7 @@ const PostWidget = ({
       {isComments && (
         <Box mt="0.5rem">
           {comments.map((comment) => (
-            <Box key={comment.id}>
+            <Box key={comment._id}>
               <Divider />
               <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
                 {comment.content}
