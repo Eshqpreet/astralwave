@@ -13,7 +13,6 @@ const FriendListWidget = ({ userId }) => {
 
   const getFriends = async () => {
     const response = await fetch(
-      //  http://localhost:3001
       `https://astralwave.onrender.com/users/${userId}/friends`,
       {
         method: "GET",
