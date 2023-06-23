@@ -18,6 +18,7 @@ HomePage with Darkmode: ![Alt text](image.png)
 Join us today by signing in to become a part of this exciting project.
 
 NOTE: KINDLY FILL ALL DETAILS IN REGISTERATION, INCLUDING THE PROFILE PIC, AND ALSO USE LOWERCASE WHILE FILLING E-MAIL DURING REGISTERATION AND LOGIN.
+
 Link: https://deft-froyo-cf1b25.netlify.app/
 # astralwave
 
